@@ -1,10 +1,13 @@
 # Use Bun base image
 FROM oven/bun:1.2.19-slim as base
 
-# Install system dependencies
+# Install system dependencies including Node.js and npm
 RUN apt-get update && apt-get install -y \
     ca-certificates \
     git \
+    curl \
+    && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+    && apt-get install -y nodejs \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -20,8 +23,8 @@ COPY packages/ packages/
 # Install dependencies
 RUN bun install --frozen-lockfile
 
-# Build the application
-RUN bun run build
+# Build only the dashboard application
+RUN bun run build:dashboard
 
 # Production stage
 FROM oven/bun:1.2.19-slim as production
