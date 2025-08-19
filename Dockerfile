@@ -9,19 +9,16 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
-# Copy package.json files
+# Copy package.json and workspace configuration
 COPY package.json bun.lock ./
-COPY apps/dashboard/package.json ./apps/dashboard/
-COPY apps/api/package.json ./apps/api/
-COPY apps/engine/package.json ./apps/engine/
-COPY apps/website/package.json ./apps/website/
-COPY packages/*/package.json ./packages/*/
+COPY turbo.json ./
+
+# Copy all package.json files for workspace dependencies
+COPY apps/ apps/
+COPY packages/ packages/
 
 # Install dependencies
 RUN bun install --frozen-lockfile
-
-# Copy source code
-COPY . .
 
 # Build the application
 RUN bun run build
