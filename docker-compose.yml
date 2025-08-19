@@ -1,0 +1,79 @@
+version: '3.8'
+
+services:
+  midday-app:
+    build: .
+    ports:
+      - "3001:3001"
+    environment:
+      # Supabase (you need to set these)
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      - NEXT_PUBLIC_SUPABASE_ID=${NEXT_PUBLIC_SUPABASE_ID}
+      - SUPABASE_SERVICE_KEY=${SUPABASE_SERVICE_KEY}
+      
+      # Upstash Redis (you need to set these)
+      - UPSTASH_REDIS_REST_URL=${UPSTASH_REDIS_REST_URL}
+      - UPSTASH_REDIS_REST_TOKEN=${UPSTASH_REDIS_REST_TOKEN}
+      
+      # Application URLs
+      - NEXT_PUBLIC_URL=http://localhost:3001
+      - NEXT_PUBLIC_API_URL=http://localhost:3003
+      
+      # Engine
+      - ENGINE_API_KEY=secret
+      - ENGINE_API_URL=http://localhost:3002
+      
+      # Invoice JWT Secret
+      - INVOICE_JWT_SECRET=secret
+      
+      # Webhook Secret
+      - WEBHOOK_SECRET_KEY=6c369443-1a88-444e-b459-7e662c1fff9e
+      
+      # Optional services (set if you have accounts)
+      - RESEND_API_KEY=${RESEND_API_KEY:-}
+      - RESEND_AUDIENCE_ID=${RESEND_AUDIENCE_ID:-}
+      - GOCARDLESS_SECRET_ID=${GOCARDLESS_SECRET_ID:-}
+      - GOCARDLESS_SECRET_KEY=${GOCARDLESS_SECRET_KEY:-}
+      - NOVU_API_KEY=${NOVU_API_KEY:-}
+      - TRIGGER_SECRET_KEY=${TRIGGER_SECRET_KEY:-}
+      - TRIGGER_PROJECT_ID=${TRIGGER_PROJECT_ID:-}
+      - TELLER_CERTIFICATE=${TELLER_CERTIFICATE:-}
+      - TELLER_CERTIFICATE_PRIVATE_KEY=${TELLER_CERTIFICATE_PRIVATE_KEY:-}
+      - NEXT_PUBLIC_TELLER_APPLICATION_ID=${NEXT_PUBLIC_TELLER_APPLICATION_ID:-}
+      - NEXT_PUBLIC_TELLER_ENVIRONMENT=${NEXT_PUBLIC_TELLER_ENVIRONMENT:-}
+      - TELLER_SIGNING_SECRET=${TELLER_SIGNING_SECRET:-}
+      - PLAID_CLIENT_ID=${PLAID_CLIENT_ID:-}
+      - PLAID_SECRET=${PLAID_SECRET:-}
+      - NEXT_PUBLIC_PLAID_ENVIRONMENT=${NEXT_PUBLIC_PLAID_ENVIRONMENT:-}
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - NEXT_PUBLIC_NOVU_APPLICATION_IDENTIFIER=${NEXT_PUBLIC_NOVU_APPLICATION_IDENTIFIER:-}
+      - PLAIN_API_KEY=${PLAIN_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MISTRAL_API_KEY=${MISTRAL_API_KEY:-}
+      - NEXT_PUBLIC_OPENPANEL_CLIENT_ID=${NEXT_PUBLIC_OPENPANEL_CLIENT_ID:-}
+      - OPENPANEL_SECRET_KEY=${OPENPANEL_SECRET_KEY:-}
+      - AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT=${AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT:-}
+      - AZURE_DOCUMENT_INTELLIGENCE_KEY=${AZURE_DOCUMENT_INTELLIGENCE_KEY:-}
+      - NEXT_PUBLIC_GOOGLE_API_KEY=${NEXT_PUBLIC_GOOGLE_API_KEY:-}
+      - VATCHECKAPI_API_KEY=${VATCHECKAPI_API_KEY:-}
+      - MIDDAY_CACHE_API_SECRET=${MIDDAY_CACHE_API_SECRET:-}
+      - POLAR_ACCESS_TOKEN=${POLAR_ACCESS_TOKEN:-}
+      - POLAR_ENVIRONMENT=${POLAR_ENVIRONMENT:-sandbox}
+      - POLAR_WEBHOOK_SECRET=${POLAR_WEBHOOK_SECRET:-}
+    depends_on:
+      - redis
+    restart: unless-stopped
+    
+  # Local Redis for development (optional if you prefer Upstash)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redis-data:/data
+
+volumes:
+  redis-data:
