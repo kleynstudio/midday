@@ -1,10 +1,12 @@
+import { cpus } from 'os';
+
 /** @type {import("next").NextConfig} */
 const config = {
   poweredByHeader: false,
   reactStrictMode: true,
   experimental: {
     // Optimize build performance for resource-constrained environments
-    cpus: Math.min(require('os').cpus().length, 2),
+    cpus: Math.min(cpus().length, 2),
     webpackBuildWorker: true,
   },
   images: {
