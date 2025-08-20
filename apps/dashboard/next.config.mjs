@@ -2,6 +2,11 @@
 const config = {
   poweredByHeader: false,
   reactStrictMode: true,
+  experimental: {
+    // Optimize build performance for resource-constrained environments
+    cpus: Math.min(require('os').cpus().length, 2),
+    webpackBuildWorker: true,
+  },
   images: {
     loader: "custom",
     loaderFile: "./image-loader.ts",

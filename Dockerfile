@@ -23,8 +23,12 @@ COPY packages/ packages/
 # Install dependencies
 RUN bun install --frozen-lockfile
 
-# Build only the dashboard application
-RUN bun run build:dashboard
+# Set Node.js memory limit and disable telemetry for build
+ENV NODE_OPTIONS="--max-old-space-size=4096"
+ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build only the dashboard application with memory optimization
+RUN NODE_OPTIONS="--max-old-space-size=4096" bun run build:dashboard
 
 # Production stage
 FROM oven/bun:1.2.19-slim as production
