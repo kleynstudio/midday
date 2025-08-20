@@ -28,7 +28,7 @@ ENV NODE_OPTIONS="--max-old-space-size=4096"
 ENV NEXT_TELEMETRY_DISABLED=1
 
 # Build only the dashboard application with memory optimization
-RUN NODE_OPTIONS="--max-old-space-size=4096" bun run build:dashboard
+RUN NODE_OPTIONS="--max-old-space-size=4096" bun run build
 
 # Production stage
 FROM oven/bun:1.2.19-slim as production
